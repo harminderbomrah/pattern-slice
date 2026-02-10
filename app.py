@@ -1,5 +1,6 @@
 import os
 import tempfile
+import hashlib
 
 import streamlit as st
 from reportlab.lib.pagesizes import A4, letter
@@ -7,20 +8,43 @@ from reportlab.lib.pagesizes import A4, letter
 from tile_pattern import create_tiled_pdf
 
 
-# Static credentials – change these to whatever you like
-USERNAME = "issy"
-PASSWORD = "issyPatternsTIY"
+def _get_auth_config():
+    """Read auth config from Streamlit secrets."""
+    auth = st.secrets.get("auth", {})
+    username = auth.get("username")
+    password_salt = auth.get("password_salt")
+    password_hash = auth.get("password_hash")
+    return username, password_salt, password_hash
+
+
+def _verify_password(entered_password: str, salt_hex: str, stored_hash_hex: str) -> bool:
+    """Verify password using PBKDF2-HMAC with SHA-256."""
+    if not entered_password or not salt_hex or not stored_hash_hex:
+        return False
+    salt = bytes.fromhex(salt_hex)
+    dk = hashlib.pbkdf2_hmac("sha256", entered_password.encode("utf-8"), salt, 100_000)
+    return dk.hex() == stored_hash_hex
 
 
 def show_login():
     st.title("Pattern Tiling Tool – Login")
     st.write("Please enter your credentials to access the tiling tool.")
 
+    configured_username, salt_hex, hash_hex = _get_auth_config()
+    if not all([configured_username, salt_hex, hash_hex]):
+        st.error(
+            "Auth is not configured. Please set [auth] username, "
+            "password_salt and password_hash in .streamlit/secrets.toml."
+        )
+        return
+
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        if username == USERNAME and password == PASSWORD:
+        if username == configured_username and _verify_password(
+            password, salt_hex, hash_hex
+        ):
             st.session_state.authenticated = True
             st.rerun()
         else:
