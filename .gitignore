@@ -24,3 +24,5 @@ env/
 .env
 .env.*
 
+# Hash files
+generate_hash.py

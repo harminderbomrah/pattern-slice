@@ -27,7 +27,7 @@ def _verify_password(entered_password: str, salt_hex: str, stored_hash_hex: str)
 
 
 def show_login():
-    st.title("Pattern Tiling Tool – Login")
+    st.title("Issy Patterns Tiling Tool – Login")
     st.write("Please enter your credentials to access the tiling tool.")
 
     configured_username, salt_hex, hash_hex = _get_auth_config()
@@ -60,7 +60,7 @@ def main():
         show_login()
         return
 
-    st.title("Pattern Tiling Tool")
+    st.title("Issy Patterns Tiling Tool")
     st.write(
         "Upload a sewing pattern PDF and convert it into tiled A4 or US Letter pages "
         "with scale rulers and alignment guides."
