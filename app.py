@@ -7,7 +7,35 @@ from reportlab.lib.pagesizes import A4, letter
 from tile_pattern import create_tiled_pdf
 
 
+# Static credentials – change these to whatever you like
+USERNAME = "issy"
+PASSWORD = "issyPatternsTIY"
+
+
+def show_login():
+    st.title("Pattern Tiling Tool – Login")
+    st.write("Please enter your credentials to access the tiling tool.")
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if username == USERNAME and password == PASSWORD:
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("Invalid username or password.")
+
+
 def main():
+    # Simple session-based auth gate
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+
+    if not st.session_state.authenticated:
+        show_login()
+        return
+
     st.title("Pattern Tiling Tool")
     st.write(
         "Upload a sewing pattern PDF and convert it into tiled A4 or US Letter pages "
