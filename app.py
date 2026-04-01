@@ -27,7 +27,7 @@ def _verify_password(entered_password: str, salt_hex: str, stored_hash_hex: str)
 
 
 def show_login():
-    st.title("Etsy Patterns Tiling Tool – Login")
+    st.title("Issy Patterns – Login")
     st.write("Please enter your credentials to access the tiling tool.")
 
     configured_username, salt_hex, hash_hex = _get_auth_config()
@@ -52,6 +52,8 @@ def show_login():
 
 
 def main():
+    st.set_page_config(page_title="Issy Patterns")
+
     # Simple session-based auth gate
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
@@ -60,7 +62,7 @@ def main():
         show_login()
         return
 
-    st.title("Etsy Patterns Tiling Tool")
+    st.title("Issy Patterns")
     st.write(
         "Upload a sewing pattern PDF and convert it into tiled A0, A4, or US Letter pages "
         "with scale rulers and alignment guides."
