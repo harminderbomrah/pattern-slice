@@ -3,7 +3,7 @@ import tempfile
 import hashlib
 
 import streamlit as st
-from reportlab.lib.pagesizes import A4, letter
+from reportlab.lib.pagesizes import A0, A4, letter
 
 from tile_pattern import create_tiled_pdf
 
@@ -62,7 +62,7 @@ def main():
 
     st.title("Etsy Patterns Tiling Tool")
     st.write(
-        "Upload a sewing pattern PDF and convert it into tiled A4 or US Letter pages "
+        "Upload a sewing pattern PDF and convert it into tiled A0, A4, or US Letter pages "
         "with scale rulers and alignment guides."
     )
 
@@ -71,7 +71,7 @@ def main():
     with st.expander("Tiling settings", expanded=True):
         page_size_label = st.radio(
             "Page size",
-            options=["A4", "US Letter"],
+            options=["A4", "A0", "US Letter"],
             index=0,
             help="Choose the paper size you will print on.",
         )
@@ -137,6 +137,8 @@ def main():
                     # Choose page size
                     if page_size_label == "A4":
                         page_size = A4
+                    elif page_size_label == "A0":
+                        page_size = A0
                     else:
                         page_size = letter
 
